@@ -53,6 +53,7 @@ resource "aws_db_instance" "bosh" {
   final_snapshot_identifier  = "${var.env}-bosh-rds-final-snapshot"
   skip_final_snapshot        = "${var.bosh_db_skip_final_snapshot}"
   auto_minor_version_upgrade = false
+  apply_immediately          = true
 
   vpc_security_group_ids = ["${aws_security_group.bosh_rds.id}"]
 
