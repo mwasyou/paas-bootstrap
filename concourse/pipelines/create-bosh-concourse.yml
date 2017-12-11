@@ -585,6 +585,27 @@ jobs:
                 ruby paas-bootstrap/concourse/scripts/extract_tf_vars_from_yaml.rb \
                 < bosh-secrets/bosh-secrets.yml > terraform-variables/bosh-secrets.tfvars.sh
 
+      - task: remove-codecommit
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+          inputs:
+            - name: paas-bootstrap
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            AWS_DEFAULT_REGION: us-east-1
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              aws codecommit delete-repository --repository-name concourse-pool-${DEPLOY_ENV}
+
       - task: terraform-apply
         config:
           platform: linux
